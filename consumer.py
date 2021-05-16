@@ -13,7 +13,7 @@ class Consumer:
         auto_offset_reset="earliest",
         bootstrap_servers="kafka-36d2881a-bsensous-2f1a.aivencloud.com:25041",
         client_id="client1",
-        group_id=None,
+        group_id="Group1",
         sasl_mechanism="PLAIN",
         sasl_plain_username=username,
         sasl_plain_password=password,
@@ -21,7 +21,7 @@ class Consumer:
         ssl_cafile="ca.pem"
     )
 
-    def receive_message_and_insert(self, consumer):
+    def receive_message(self, consumer):
         """
         This method is used to receive messages created by the producer and insert into a table
         in postgresql
@@ -30,15 +30,15 @@ class Consumer:
         message_id = 0
         for _ in range(10):
             messages = consumer.poll(timeout_ms=1000)
-            print(messages)
+            # print(messages)
             for topic, message in messages.items():
                 for msg in message:
                     message_id = message_id + 1
-                    print("Received: {}".format(msg))
+                    print("Received: {}".format(msg.value))
                     try:
                         db_connection = psycopg2.connect(user="admin", password="admin#123",
-                                                         host="127.0.0.1", port="5432",
-                                                         database="postgredb")
+                                                               host="127.0.0.1", port="5432",
+                                                                       database="postgredb")
                         cursor = db_connection.cursor()
                         query = """INSERT INTO MESSAGE(ID,MESSAGE) VALUES(%s,%s)"""
                         values = (message_id, msg)
@@ -49,7 +49,7 @@ class Consumer:
                     except (Exception, psycopg2.Error) as Error:
                         print("Insertion failed  due to {}".format(Error))
                     finally:
-                        cursor.close()
-                        db_connection.close()
+                             cursor.close()
+                             db_connection.close()
 
         consumer.commit()  # to not get duplicate messages
