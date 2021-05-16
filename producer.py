@@ -16,9 +16,6 @@ class Producer:
         ssl_cafile="ca.pem"
     )
 
-    def __init__(self):
-        pass
-
     def produce_message(self, producer):
         """
         This method is required to create the messages by connecting Kafka for a specific topic
