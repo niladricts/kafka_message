@@ -35,21 +35,21 @@ class Consumer:
                 for msg in message:
                     message_id = message_id + 1
                     print("Received: {}".format(msg.value))
-                    try:
-                        db_connection = psycopg2.connect(user="admin", password="admin#123",
-                                                               host="127.0.0.1", port="5432",
-                                                                       database="postgredb")
-                        cursor = db_connection.cursor()
-                        query = """INSERT INTO MESSAGE(ID,MESSAGE) VALUES(%s,%s)"""
-                        values = (message_id, msg)
-                        cursor.execute(query, values)
-                        count = cursor.rowcount
-                        print("Successfully inserted {} records".format(count))
-                        db_connection.commit()
-                    except (Exception, psycopg2.Error) as Error:
-                        print("Insertion failed  due to {}".format(Error))
-                    finally:
-                             cursor.close()
-                             db_connection.close()
+                    # try:
+                    # db_connection = psycopg2.connect(user="admin", password="admin#123",
+                                                               # host="127.0.0.1", port="5432",
+                                                                       # database="postgredb")
+                    # cursor = db_connection.cursor()
+                    # query = """INSERT INTO MESSAGE(ID,MESSAGE) VALUES(%s,%s)"""
+                    # values = (message_id, msg)
+                    # cursor.execute(query, values)
+                    # count = cursor.rowcount
+                    # print("Successfully inserted {} records".format(count))
+                    # db_connection.commit()
+                    # except (Exception, psycopg2.Error) as Error:
+                    # print("Insertion failed  due to {}".format(Error))
+                    # finally:
+                    # cursor.close()
+                    # db_connection.close()
 
         consumer.commit()  # to not get duplicate messages
